@@ -1,0 +1,68 @@
+{
+	"name": "Synapsetest",
+	"properties": {
+		"activities": [
+			{
+				"name": "Synapseload",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "SynapseDF",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"tableName": {
+									"value": "@pipeline().parameters.srcTableName",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"tableName": {
+									"value": "@pipeline().parameters.tgtTableName",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "LS_Staging_Storage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "igmsynapsedatalakefilesysdev/Staging"
+					},
+					"integrationRuntime": {
+						"referenceName": "IGMCROSynapseIR",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"srcTableName": {
+				"type": "string",
+				"defaultValue": "igm2323001_canopy_ihc_raw"
+			},
+			"tgtTableName": {
+				"type": "string",
+				"defaultValue": "igm8444001_bioagilytix_ada_hist_temp"
+			}
+		},
+		"folder": {
+			"name": "POC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-12T15:27:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

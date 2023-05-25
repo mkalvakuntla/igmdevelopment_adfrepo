@@ -1,0 +1,131 @@
+{
+	"name": "IGM_CRO_SFTP_To_Synapse",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_File_SFTP_To_DBFS",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": {
+						"value": "@variables('v_Notebook_Copy_File_SFTP_To_DBFS')",
+						"type": "Expression"
+					},
+					"baseParameters": {
+						"sftp_dir_name": {
+							"value": "@pipeline().parameters.p_source_sftp_dir",
+							"type": "Expression"
+						},
+						"filename": {
+							"value": "@pipeline().parameters.p_source_file_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Validate_File_Columns",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Set variable - Copy status",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Templates/IGM_CRO_Validate_File_Columns",
+					"baseParameters": {
+						"sftp_dir_name": {
+							"value": "@pipeline().parameters.p_source_sftp_dir",
+							"type": "Expression"
+						},
+						"raw_table_name": {
+							"value": "@pipeline().parameters.p_raw_table_name",
+							"type": "Expression"
+						},
+						"sheet_name": {
+							"value": "@pipeline().parameters.p_file_sheet_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable - Copy status",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy_File_SFTP_To_DBFS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vCopy_Status",
+					"value": {
+						"value": "@activity('Copy_File_SFTP_To_DBFS').output.runOutput",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"p_source_sftp_dir": {
+				"type": "string"
+			},
+			"p_source_file_name": {
+				"type": "string"
+			},
+			"p_raw_table_name": {
+				"type": "string"
+			},
+			"p_file_sheet_name": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"v_Notebook_Copy_File_SFTP_To_DBFS": {
+				"type": "String",
+				"defaultValue": "/Templates/IGM_CRO_Copy_File_SFTP_To_DBFS"
+			},
+			"vCopy_Status": {
+				"type": "Boolean",
+				"defaultValue": false
+			}
+		},
+		"folder": {
+			"name": "CRO/IGM-2644-001"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-24T10:27:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,12 @@
+{
+	"name": "LS_Staging_Storage",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=igmsynapsedatalakeactdev;EndpointSuffix=core.windows.net;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEE5NDZEQjE5LTREOTctNDRBNy1CMENBLUM1NUE2RThEM0FDRF8zOTkwZTkxZi02NjU5LTQ0ZjctYjk4ZC05OWVlYmFmOTU0MjIiDQp9"
+		}
+	}
+}
